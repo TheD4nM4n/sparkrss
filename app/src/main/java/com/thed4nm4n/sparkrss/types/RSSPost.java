@@ -1,6 +1,4 @@
-package com.thed4nm4n.sparkrss;
-
-import org.json.JSONObject;
+package com.thed4nm4n.sparkrss.types;
 
 public class RSSPost {
 

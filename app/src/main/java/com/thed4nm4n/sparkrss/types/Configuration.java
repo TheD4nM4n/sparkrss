@@ -1,4 +1,4 @@
-package com.thed4nm4n.sparkrss;
+package com.thed4nm4n.sparkrss.types;
 
 import java.util.ArrayList;
 import java.util.List;

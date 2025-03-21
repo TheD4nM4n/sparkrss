@@ -1,7 +1,6 @@
-package com.thed4nm4n.sparkrss;
+package com.thed4nm4n.sparkrss.singletons;
 
 import android.content.Context;
-import android.view.PixelCopy;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;

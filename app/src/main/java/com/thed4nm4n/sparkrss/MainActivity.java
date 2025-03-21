@@ -1,7 +1,5 @@
 package com.thed4nm4n.sparkrss;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -14,30 +12,32 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.apptasticsoftware.rssreader.Item;
-import com.apptasticsoftware.rssreader.RssReader;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import com.thed4nm4n.sparkrss.fragments.RSSPostFragment;
+import com.thed4nm4n.sparkrss.fragments.SettingsFragment;
+import com.thed4nm4n.sparkrss.fragments.HeaderFragment;
+import com.thed4nm4n.sparkrss.singletons.ImageLoaderSingleton;
+import com.thed4nm4n.sparkrss.types.Configuration;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
+
+    private List<Fragment> activeFragments = new ArrayList<>();
+    private List<Fragment> homeFragments = new ArrayList<>();
+    private List<String> feeds;
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,57 +58,110 @@ public class MainActivity extends AppCompatActivity {
         ImageLoaderSingleton.getInstance(this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener( item -> {
-            String fileContents = "Hello world";
+        bottomNavigationView.setOnItemSelectedListener(navListener);
+//        bottomNavigationView.setOnNavigationItemSelectedListener( item -> {
+//            String fileContents = "Hello world";
+//
+//            try(FileOutputStream fos = this.openFileOutput("settings.json", Context.MODE_PRIVATE)) {
+//                fos.write(fileContents.getBytes());
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            try {
+//                FileInputStream fis = this.openFileInput("settings.json");
+//                InputStreamReader inputStreamReader = new InputStreamReader(fis, StandardCharsets.UTF_8);
+//                StringBuilder stringBuilder = new StringBuilder();
+//                BufferedReader reader = new BufferedReader(inputStreamReader);
+//                String line = reader.readLine();
+//                while (line != null) {
+//                    stringBuilder.append(line).append("\n");
+//                    line = reader.readLine();
+//                }
+//                Log.d("TESTING", stringBuilder.toString());
+//                fis.close();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            return true;
+//        });
 
-            try(FileOutputStream fos = this.openFileOutput("settings.json", Context.MODE_PRIVATE)) {
-                fos.write(fileContents.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        feeds = Configuration.getInstance().getFeeds();
+        fm = getSupportFragmentManager();
 
-            try {
-                FileInputStream fis = this.openFileInput("settings.json");
-                InputStreamReader inputStreamReader = new InputStreamReader(fis, StandardCharsets.UTF_8);
-                StringBuilder stringBuilder = new StringBuilder();
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String line = reader.readLine();
-                while (line != null) {
-                    stringBuilder.append(line).append("\n");
-                    line = reader.readLine();
-                }
-                Log.d("TESTING", stringBuilder.toString());
-                fis.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        showHomeFragments();
+    }
 
-            return true;
-        });
+    private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
-        List<String> feeds = Configuration.getInstance().getFeeds();
-        FragmentManager fm = getSupportFragmentManager();
-
-        fm.beginTransaction()
-                .add(R.id.fragment_container, new WelcomeFragment())
-                .commit();
-
-        for (int i = 0; i < feeds.size(); i++) {
-            try {
-                SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(feeds.get(i))));
-                List<SyndEntry> entries = feed.getEntries();
-
-                for (int x = 0; x < entries.size(); x++) {
-                    Fragment frag = new RSSPostFragment(entries.get(x));
-                    fm.beginTransaction()
-                            .add(R.id.fragment_container, frag)
-                            .commit();
-
-                }
-            } catch (FeedException | IOException e) {
-                Log.d("ERROR", "Failed to parse RSS feed.");
-
-            }
+        int itemId = item.getItemId();
+        if (itemId == R.id.home_menu) {
+            clearFragments();
+            showHomeFragments();
         }
+        else if (itemId == R.id.settings_menu) {
+            clearFragments();
+            showSettingsFragments();
+        }
+        return true;
+    };
+
+    private void clearFragments() {
+        if (!activeFragments.isEmpty()) {
+            FragmentTransaction transaction = fm.beginTransaction();
+            for (Fragment frag : activeFragments) {
+                transaction.remove(frag);
+            }
+            activeFragments.clear();
+            transaction.commit();
+        }
+    }
+
+       private void showHomeFragments() {
+
+           FragmentTransaction transaction = fm.beginTransaction();
+
+           if (homeFragments.isEmpty()) {
+
+               homeFragments.add(new HeaderFragment(getString(R.string.home_header)));
+
+               for (int i = 0; i < feeds.size(); i++) {
+                   try {
+                       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(feeds.get(i))));
+                       List<SyndEntry> entries = feed.getEntries();
+
+                       for (int x = 0; x < entries.size(); x++) {
+                           Fragment frag = new RSSPostFragment(entries.get(x));
+                           homeFragments.add(frag);
+                       }
+
+                   } catch (FeedException | IOException e) {
+                       Log.d("ERROR", String.format("Failed to parse RSS feed: %s", feeds.get(i)));
+
+                   }
+               }
+           }
+
+           for (Fragment frag : homeFragments) {
+               activeFragments.add(frag);
+               transaction.add(R.id.fragment_container, frag);
+           }
+
+           transaction.commit();
+       }
+
+    private void showSettingsFragments() {
+
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        activeFragments.add(new HeaderFragment("Settings"));
+        activeFragments.add(new SettingsFragment());
+
+        for (Fragment frag : activeFragments) {
+            transaction.add(R.id.fragment_container, frag);
+        }
+
+        transaction.commit();
     }
 }

@@ -1,10 +1,8 @@
-package com.thed4nm4n.sparkrss;
+package com.thed4nm4n.sparkrss.singletons;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
-
-import androidx.annotation.Nullable;
 
 import com.android.volley.toolbox.ImageLoader;
 

@@ -1,18 +1,18 @@
-package com.thed4nm4n.sparkrss;
+package com.thed4nm4n.sparkrss.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.apptasticsoftware.rssreader.Item;
 import com.rometools.rome.feed.synd.SyndEntry;
+import com.thed4nm4n.sparkrss.R;
+import com.thed4nm4n.sparkrss.RSSPostActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

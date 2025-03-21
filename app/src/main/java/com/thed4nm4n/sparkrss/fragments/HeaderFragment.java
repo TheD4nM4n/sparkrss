@@ -1,4 +1,4 @@
-package com.thed4nm4n.sparkrss;
+package com.thed4nm4n.sparkrss.fragments;
 
 import android.os.Bundle;
 
@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-public class WelcomeFragment extends Fragment {
+import com.thed4nm4n.sparkrss.R;
 
-    public WelcomeFragment() {
-        // Required empty public constructor
+public class HeaderFragment extends Fragment {
+
+    private final String text;
+    public HeaderFragment(String text) {
+        this.text = text;
     }
 
 
@@ -24,6 +28,11 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+        View view = inflater.inflate(R.layout.fragment_welcome, container, false);
+
+        TextView tv = view.findViewById(R.id.header_text);
+        tv.setText(text);
+
+        return view;
     }
 }
