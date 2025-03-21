@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class RSSPostFragment extends Fragment implements View.OnClickListener {
 
-    private SyndEntry post;
+    private final SyndEntry post;
 
     public RSSPostFragment(SyndEntry post) {
         this.post = post;
@@ -55,7 +55,7 @@ public class RSSPostFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getView().getContext(), RSSPostActivity.class);
-        intent.putExtra("url", post.getLink());
+        intent.putExtra("url", post.getUri());
         intent.putExtra("title", post.getTitle());
         if (post.getDescription() == null) {
             intent.putExtra("desc", "No description provided");

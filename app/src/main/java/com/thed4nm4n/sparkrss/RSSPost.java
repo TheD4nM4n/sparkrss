@@ -4,11 +4,11 @@ import org.json.JSONObject;
 
 public class RSSPost {
 
-    private String title;
-    private String author;
-    private String description;
-    private String url;
-    private String publicationDate;
+    private final String title;
+    private final String author;
+    private final String description;
+    private final String url;
+    private final String publicationDate;
 
     public RSSPost(String title, String author, String description, String url, String publicationDate) {
         this.author = author;
