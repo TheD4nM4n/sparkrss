@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:padding="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".RSSPostFragment">
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 

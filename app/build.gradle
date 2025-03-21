@@ -36,6 +36,7 @@ dependencies {
     implementation libs.rssreader
     implementation libs.rome
     implementation libs.cardview
+    implementation libs.volley
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

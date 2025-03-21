@@ -1,9 +1,11 @@
 package com.thed4nm4n.sparkrss;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,7 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class RSSPostFragment extends Fragment {
+public class RSSPostFragment extends Fragment implements View.OnClickListener {
 
     private SyndEntry post;
 
@@ -26,6 +28,7 @@ public class RSSPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -34,6 +37,7 @@ public class RSSPostFragment extends Fragment {
 
         // Add post information to view
         View view = inflater.inflate(R.layout.fragment_rsspost, container, false);
+        view.setOnClickListener(this);
 
         final TextView titleTextView = view.findViewById(R.id.post_title);
         titleTextView.setText(post.getTitle());
@@ -46,5 +50,19 @@ public class RSSPostFragment extends Fragment {
         dateTextView.setText(date);
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getView().getContext(), RSSPostActivity.class);
+        intent.putExtra("url", post.getLink());
+        intent.putExtra("title", post.getTitle());
+        if (post.getDescription() == null) {
+            intent.putExtra("desc", "No description provided");
+        } else {
+            intent.putExtra("desc", post.getDescription().toString());
+        }
+
+        this.startActivity(intent);
     }
 }
