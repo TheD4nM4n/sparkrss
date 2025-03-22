@@ -24,8 +24,10 @@ import com.rometools.rome.io.XmlReader;
 import com.thed4nm4n.sparkrss.fragments.RSSPostFragment;
 import com.thed4nm4n.sparkrss.fragments.SettingsFragment;
 import com.thed4nm4n.sparkrss.fragments.HeaderFragment;
-import com.thed4nm4n.sparkrss.singletons.ImageLoaderSingleton;
+import com.thed4nm4n.sparkrss.handlers.ImageLoaderHandler;
 import com.thed4nm4n.sparkrss.types.Configuration;
+import com.thed4nm4n.sparkrss.types.RSSFeed;
+import com.thed4nm4n.sparkrss.types.RSSPost;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Fragment> activeFragments = new ArrayList<>();
     private List<Fragment> homeFragments = new ArrayList<>();
-    private List<String> feeds;
+    private List<RSSFeed> feeds = new ArrayList<>();
     private FragmentManager fm;
 
     @Override
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         // Setting up Volley queue and image loader
-        ImageLoaderSingleton.getInstance(this);
+        ImageLoaderHandler.getInstance(this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(navListener);
@@ -87,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
 //            return true;
 //        });
 
-        feeds = Configuration.getInstance().getFeeds();
         fm = getSupportFragmentManager();
-
         showHomeFragments();
     }
 
@@ -121,24 +121,27 @@ public class MainActivity extends AppCompatActivity {
        private void showHomeFragments() {
 
            FragmentTransaction transaction = fm.beginTransaction();
+           List<String> feedUrls = Configuration.getInstance().getFeeds();
 
            if (homeFragments.isEmpty()) {
 
                homeFragments.add(new HeaderFragment(getString(R.string.home_header)));
 
-               for (int i = 0; i < feeds.size(); i++) {
+               for (int i = 0; i < feedUrls.size(); i++) {
                    try {
-                       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(feeds.get(i))));
-                       List<SyndEntry> entries = feed.getEntries();
-
-                       for (int x = 0; x < entries.size(); x++) {
-                           Fragment frag = new RSSPostFragment(entries.get(x));
-                           homeFragments.add(frag);
-                       }
+                       SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(feedUrls.get(i))));
+                       feeds.add(RSSFeed.fromSyndFeed(syndFeed));
 
                    } catch (FeedException | IOException e) {
-                       Log.d("ERROR", String.format("Failed to parse RSS feed: %s", feeds.get(i)));
+                       Log.d("ERROR", String.format("Failed to parse RSS feed: %s", feedUrls.get(i)));
 
+                   }
+               }
+
+               for (RSSFeed feed : feeds) {
+                   for(RSSPost post : feed.getEntries()) {
+                       Fragment frag = new RSSPostFragment(post);
+                       homeFragments.add(frag);
                    }
                }
            }

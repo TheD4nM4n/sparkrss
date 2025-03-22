@@ -5,4 +5,5 @@
     <string name="home_menu">Home</string>
     <string name="settings_menu">Settings</string>
     <string name="home_header">Your latest updates</string>
+    <string name="link_icon_hint">follow link icon</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.thed4nm4n.sparkrss.singletons;
+package com.thed4nm4n.sparkrss.handlers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,14 +6,14 @@ import android.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 
-public class ImageLoaderSingleton {
+public class ImageLoaderHandler {
 
-    private static ImageLoaderSingleton instance;
+    private static ImageLoaderHandler instance;
     private final ImageLoader loader;
 
-    private ImageLoaderSingleton(Context context) {
+    private ImageLoaderHandler(Context context) {
         loader = new ImageLoader(
-                RequestQueueSingleton.getInstance(context).getRequestQueue(),
+                RequestQueueHandler.getInstance(context).getRequestQueue(),
                 new ImageLoader.ImageCache() {
 
                     private final LruCache<String, Bitmap> cache = new LruCache<>(20);
@@ -29,9 +29,9 @@ public class ImageLoaderSingleton {
                 });
     }
 
-    public static synchronized ImageLoaderSingleton getInstance(Context context) {
+    public static synchronized ImageLoaderHandler getInstance(Context context) {
         if (instance == null) {
-            instance = new ImageLoaderSingleton(context);
+            instance = new ImageLoaderHandler(context);
         }
         return instance;
     }

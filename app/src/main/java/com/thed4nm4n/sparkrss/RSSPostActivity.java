@@ -9,7 +9,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.thed4nm4n.sparkrss.handlers.ImageLoaderHandler;
+import com.thed4nm4n.sparkrss.types.RSSPost;
+
 public class RSSPostActivity extends AppCompatActivity {
+
+    private RSSPost post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +28,19 @@ public class RSSPostActivity extends AppCompatActivity {
             return insets;
         });
 
+
         Bundle extras = getIntent().getExtras();
 
+        if (extras != null) {
+            post = extras.getSerializable("post", RSSPost.class);
+        }
+
+        NetworkImageView post_image = findViewById(R.id.post_image);
+        post_image.setImageUrl(post.getImageUrl(), ImageLoaderHandler.getInstance(this).getImageLoader());
         TextView titleText = findViewById(R.id.post_title);
         TextView descText = findViewById(R.id.post_desc);
 
-        titleText.setText(extras.getString("title"));
-        descText.setText(extras.getString("desc"));
+        titleText.setText(post.getTitle());
+        descText.setText(post.getDescription());
     }
 }

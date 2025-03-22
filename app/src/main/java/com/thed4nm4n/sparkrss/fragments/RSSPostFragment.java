@@ -13,15 +13,16 @@ import android.widget.TextView;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.thed4nm4n.sparkrss.R;
 import com.thed4nm4n.sparkrss.RSSPostActivity;
+import com.thed4nm4n.sparkrss.types.RSSPost;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class RSSPostFragment extends Fragment implements View.OnClickListener {
 
-    private final SyndEntry post;
+    private final RSSPost post;
 
-    public RSSPostFragment(SyndEntry post) {
+    public RSSPostFragment(RSSPost post) {
         this.post = post;
     }
 
@@ -45,9 +46,8 @@ public class RSSPostFragment extends Fragment implements View.OnClickListener {
         final TextView authorTextView = view.findViewById(R.id.post_author);
         authorTextView.setText(post.getAuthor());
 
-        String date = new SimpleDateFormat("MM/dd", Locale.US).format(post.getPublishedDate());
         final TextView dateTextView = view.findViewById(R.id.post_date);
-        dateTextView.setText(date);
+        dateTextView.setText(post.getPublicationDate());
 
         return view;
     }
@@ -55,13 +55,7 @@ public class RSSPostFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getView().getContext(), RSSPostActivity.class);
-        intent.putExtra("url", post.getUri());
-        intent.putExtra("title", post.getTitle());
-        if (post.getDescription() == null) {
-            intent.putExtra("desc", "No description provided");
-        } else {
-            intent.putExtra("desc", post.getDescription().toString());
-        }
+        intent.putExtra("post", post);
 
         this.startActivity(intent);
     }

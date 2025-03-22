@@ -9,7 +9,7 @@ public class Configuration {
     private final List<String> feeds = new ArrayList<>();
 
     private Configuration() {
-        feeds.add("https://www.reddit.com/r/space/.rss?format=xml");
+        feeds.add("https://pitchfork.com/feed/feed-news/rss");
     }
 
     public static synchronized Configuration getInstance() {
