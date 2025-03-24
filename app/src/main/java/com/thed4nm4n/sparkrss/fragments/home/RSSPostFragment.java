@@ -1,4 +1,4 @@
-package com.thed4nm4n.sparkrss.fragments;
+package com.thed4nm4n.sparkrss.fragments.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rometools.rome.feed.synd.SyndEntry;
 import com.thed4nm4n.sparkrss.R;
 import com.thed4nm4n.sparkrss.RSSPostActivity;
 import com.thed4nm4n.sparkrss.types.RSSPost;
@@ -47,7 +46,8 @@ public class RSSPostFragment extends Fragment implements View.OnClickListener {
         authorTextView.setText(post.getAuthor());
 
         final TextView dateTextView = view.findViewById(R.id.post_date);
-        dateTextView.setText(post.getPublicationDate());
+        String date = new SimpleDateFormat("MM/dd/yy", Locale.US).format(post.getPublicationDate());
+        dateTextView.setText(date);
 
         return view;
     }
@@ -59,4 +59,5 @@ public class RSSPostFragment extends Fragment implements View.OnClickListener {
 
         this.startActivity(intent);
     }
+
 }

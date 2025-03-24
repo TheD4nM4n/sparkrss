@@ -1,0 +1,180 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="@dimen/margin_horizontal"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    tools:context=".fragments.home.RSSPostFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:paddingVertical="16sp"
+            android:text="Debug"
+            android:layout_marginStart="@dimen/margin_horizontal"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="8sp">
+
+            <TextView
+                android:text="Enable debug mode"
+                android:enabled="true"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingVertical="14sp"
+                android:layout_marginHorizontal="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/debug_toggle" />
+
+
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/debug_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_marginEnd="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="8sp">
+
+            <TextView
+                android:text="Dump config to log"
+                android:enabled="true"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingVertical="14sp"
+                android:layout_marginHorizontal="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/dump_config_button" />
+
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/dump_config_button"
+                android:text="Dump"
+                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/design_default_color_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_marginEnd="8sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="8sp">
+
+            <TextView
+                android:text="Reset to defaults"
+                android:enabled="true"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingVertical="14sp"
+                android:layout_marginHorizontal="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reset_config_button" />
+
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/reset_config_button"
+                android:text="Reset"
+                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/design_default_color_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_marginEnd="8sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="8sp">
+
+            <TextView
+                android:text="Add default feed to feeds"
+                android:enabled="true"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingVertical="14sp"
+                android:layout_marginHorizontal="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/default_feed_button" />
+
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/default_feed_button"
+                android:text="Add"
+                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/design_default_color_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_marginEnd="8sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="8sp">
+
+            <TextView
+                android:text="Write config to disk"
+                android:enabled="true"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingVertical="14sp"
+                android:layout_marginHorizontal="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/write_config_button" />
+
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/write_config_button"
+                android:text="Write"
+                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/design_default_color_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_marginEnd="8sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

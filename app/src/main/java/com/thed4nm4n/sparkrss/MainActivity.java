@@ -2,9 +2,9 @@ package com.thed4nm4n.sparkrss;
 
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -12,33 +12,14 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.rometools.rome.feed.synd.SyndEntry;
-import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
-import com.thed4nm4n.sparkrss.fragments.RSSPostFragment;
-import com.thed4nm4n.sparkrss.fragments.SettingsFragment;
-import com.thed4nm4n.sparkrss.fragments.HeaderFragment;
+import com.thed4nm4n.sparkrss.fragments.home.HomeMenuFragment;
+import com.thed4nm4n.sparkrss.fragments.settings.SettingsMenuFragment;
 import com.thed4nm4n.sparkrss.handlers.ImageLoaderHandler;
-import com.thed4nm4n.sparkrss.types.Configuration;
-import com.thed4nm4n.sparkrss.types.RSSFeed;
-import com.thed4nm4n.sparkrss.types.RSSPost;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private List<Fragment> activeFragments = new ArrayList<>();
-    private List<Fragment> homeFragments = new ArrayList<>();
-    private List<RSSFeed> feeds = new ArrayList<>();
     private FragmentManager fm;
 
     @Override
@@ -52,119 +33,40 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        this.getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finishAffinity();
+            }
+        });
+
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
         StrictMode.setThreadPolicy(policy);
 
         // Setting up Volley queue and image loader
         ImageLoaderHandler.getInstance(this);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(navListener);
-//        bottomNavigationView.setOnNavigationItemSelectedListener( item -> {
-//            String fileContents = "Hello world";
-//
-//            try(FileOutputStream fos = this.openFileOutput("settings.json", Context.MODE_PRIVATE)) {
-//                fos.write(fileContents.getBytes());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            try {
-//                FileInputStream fis = this.openFileInput("settings.json");
-//                InputStreamReader inputStreamReader = new InputStreamReader(fis, StandardCharsets.UTF_8);
-//                StringBuilder stringBuilder = new StringBuilder();
-//                BufferedReader reader = new BufferedReader(inputStreamReader);
-//                String line = reader.readLine();
-//                while (line != null) {
-//                    stringBuilder.append(line).append("\n");
-//                    line = reader.readLine();
-//                }
-//                Log.d("TESTING", stringBuilder.toString());
-//                fis.close();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            return true;
-//        });
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(navListener);
 
         fm = getSupportFragmentManager();
-        showHomeFragments();
+
+        fm.beginTransaction().add(R.id.fragment_container, HomeMenuFragment.getInstance(this)).commit();
     }
 
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
+        for (Fragment fragment : fm.getFragments()) {
+            fm.beginTransaction().remove(fragment).commit();
+        }
+
         int itemId = item.getItemId();
         if (itemId == R.id.home_menu) {
-            clearFragments();
-            showHomeFragments();
-        }
-        else if (itemId == R.id.settings_menu) {
-            clearFragments();
-            showSettingsFragments();
+            fm.beginTransaction().add(R.id.fragment_container, HomeMenuFragment.getInstance(this)).commit();
+        } else if (itemId == R.id.settings_menu) {
+            fm.beginTransaction().add(R.id.fragment_container, new SettingsMenuFragment()).commit();
         }
         return true;
     };
-
-    private void clearFragments() {
-        if (!activeFragments.isEmpty()) {
-            FragmentTransaction transaction = fm.beginTransaction();
-            for (Fragment frag : activeFragments) {
-                transaction.remove(frag);
-            }
-            activeFragments.clear();
-            transaction.commit();
-        }
-    }
-
-       private void showHomeFragments() {
-
-           FragmentTransaction transaction = fm.beginTransaction();
-           List<String> feedUrls = Configuration.getInstance().getFeeds();
-
-           if (homeFragments.isEmpty()) {
-
-               homeFragments.add(new HeaderFragment(getString(R.string.home_header)));
-
-               for (int i = 0; i < feedUrls.size(); i++) {
-                   try {
-                       SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(feedUrls.get(i))));
-                       feeds.add(RSSFeed.fromSyndFeed(syndFeed));
-
-                   } catch (FeedException | IOException e) {
-                       Log.d("ERROR", String.format("Failed to parse RSS feed: %s", feedUrls.get(i)));
-
-                   }
-               }
-
-               for (RSSFeed feed : feeds) {
-                   for(RSSPost post : feed.getEntries()) {
-                       Fragment frag = new RSSPostFragment(post);
-                       homeFragments.add(frag);
-                   }
-               }
-           }
-
-           for (Fragment frag : homeFragments) {
-               activeFragments.add(frag);
-               transaction.add(R.id.fragment_container, frag);
-           }
-
-           transaction.commit();
-       }
-
-    private void showSettingsFragments() {
-
-        FragmentTransaction transaction = fm.beginTransaction();
-
-        activeFragments.add(new HeaderFragment("Settings"));
-        activeFragments.add(new SettingsFragment());
-
-        for (Fragment frag : activeFragments) {
-            transaction.add(R.id.fragment_container, frag);
-        }
-
-        transaction.commit();
-    }
 }

@@ -1,16 +1,17 @@
 package com.thed4nm4n.sparkrss.types;
 
-import android.media.Image;
-
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndLink;
+import com.thed4nm4n.sparkrss.fragments.home.RSSPostFragment;
 
 import org.jdom2.Element;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RSSPost implements Serializable {
@@ -19,10 +20,10 @@ public class RSSPost implements Serializable {
     private final String author;
     private final String description;
     private final String url;
-    private final String publicationDate;
+    private final Date publicationDate;
     private final String imageUrl;
 
-    private RSSPost(String title, String author, String description, String url, String publicationDate, String imageUrl) {
+    private RSSPost(String title, String author, String description, String url, Date publicationDate, String imageUrl) {
         this.author = author;
         this.title = title;
         this.description = description;
@@ -39,7 +40,7 @@ public class RSSPost implements Serializable {
             urls.add(syndLink.toString());
         }
 
-        String imgUrl = null;
+        String imgUrl = "";
 
         List<Element> foreignMarkups = (List<Element>) syndEntry.getForeignMarkup();
         for (Element foreignMarkup : foreignMarkups) {
@@ -53,7 +54,7 @@ public class RSSPost implements Serializable {
                 syndEntry.getAuthor(),
                 null == syndEntry.getDescription() ? "None provided" : syndEntry.getDescription().getValue(),
                 syndEntry.getLink(),
-                syndEntry.getPublishedDate().toString(),
+                syndEntry.getPublishedDate(),
                 imgUrl
         );
     }
@@ -75,10 +76,14 @@ public class RSSPost implements Serializable {
     }
 
     public @Nullable String getImageUrl() {
-        return imageUrl.equals("null") ? null : imageUrl;
+        return imageUrl.isEmpty() ? null : imageUrl;
     }
 
-    public String getPublicationDate() {
+    public Date getPublicationDate() {
         return publicationDate;
+    }
+
+    public Fragment getFragment() {
+        return new RSSPostFragment(this);
     }
 }

@@ -12,6 +12,7 @@ volley = "1.2.1"
 rssreader = "3.9.1"
 rome = "2.1.0"
 cardview = "1.0.0"
+swiperefreshlayout = "1.2.0-beta01"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -26,6 +27,7 @@ volley = { module = "com.android.volley:volley", version.ref = "volley" }
 rssreader = { group = "com.apptasticsoftware", name = "rssreader", version.ref = "rssreader" }
 rome = { group = "com.rometools", name = "rome", version.ref = "rome" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
