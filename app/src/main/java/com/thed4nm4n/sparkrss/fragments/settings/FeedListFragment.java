@@ -1,4 +1,4 @@
-package com.thed4nm4n.sparkrss.fragments;
+package com.thed4nm4n.sparkrss.fragments.settings;
 
 import android.os.Bundle;
 
@@ -11,10 +11,9 @@ import android.view.ViewGroup;
 import com.thed4nm4n.sparkrss.R;
 
 
-public class FeedLoadingFragment extends Fragment {
+public class FeedListFragment extends Fragment {
 
-
-    public FeedLoadingFragment() {
+    public FeedListFragment() {
         // Required empty public constructor
     }
 
@@ -27,6 +26,6 @@ public class FeedLoadingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed_loading, container, false);
+        return inflater.inflate(R.layout.fragment_feed_list, container, false);
     }
 }
